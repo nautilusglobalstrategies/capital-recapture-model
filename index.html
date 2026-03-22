@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Capital Recapture Model | Wealth Assistance</title>
+  <title>Capital Recapture Model</title>
   <style>
     :root{
       --bg:#06080d;
@@ -25,8 +25,6 @@
       --danger:#ef4444;
       --success:#22c55e;
       --shadow:0 20px 55px rgba(0,0,0,.45);
-      --radius:22px;
-      --radius-sm:14px;
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
@@ -165,6 +163,10 @@
       border:1px solid rgba(255,255,255,.06);
       background:
         linear-gradient(180deg, var(--glass), var(--glass-2));
+    }
+
+    .group.hidden-group{
+      display:none;
     }
 
     .group h3{
@@ -417,14 +419,14 @@
     <section class="hero">
       <div class="hero-inner">
         <div>
-          <div class="eyebrow">Standalone Strategy Tool</div>
+          <div class="eyebrow">Capital Recapture Engine™</div>
           <h1>Capital Recapture Model</h1>
           <p>
-            A decision tool built around the <strong>Capital Recapture Engine™</strong> to model how capital can be recaptured, redeployed, and cycled to accelerate debt elimination.
+            A decision tool designed to model how capital can be recaptured, redeployed, and cycled to accelerate debt elimination.
           </p>
         </div>
         <div class="hero-note">
-          <strong style="color:var(--gold-soft)">Purpose:</strong> compare a standard payoff path against a structured recapture cycle using Level 1 capital, deposit timing, and recurring obligations.
+          <strong style="color:var(--gold-soft)">Purpose:</strong> compare a standard payoff path against a structured recapture cycle using deposit timing, recurring obligations, and a hidden Level 1 capital layer.
         </div>
       </div>
     </section>
@@ -433,7 +435,7 @@
       <section class="panel">
         <div class="panel-head">
           <h2>Inputs</h2>
-          <p>Enter your deposits, monthly obligations, debt profile, and Level 1 assumptions.</p>
+          <p>Enter your deposits, monthly obligations, and primary debt profile.</p>
         </div>
 
         <div class="content">
@@ -534,7 +536,7 @@
               </div>
             </div>
 
-            <div class="group">
+            <div class="group hidden-group" aria-hidden="true">
               <h3>Level 1 Capital Layer</h3>
               <div class="row">
                 <div>
@@ -557,13 +559,9 @@
                   <input type="number" id="chunkMin" value="1000" inputmode="decimal">
                 </div>
               </div>
-
-              <div class="muted">
-                Level 1 represents the first capital layer in the recapture cycle. A new deployment is only made after Level 1 is paid back down near zero.
-              </div>
             </div>
 
-            <button class="btn" id="calcBtn">Run Capital Recapture Model</button>
+            <button class="btn" id="calcBtn">Apply Level 1 Capital Recapture Engine</button>
 
             <div class="results" id="results">
               <h3>Results</h3>
@@ -607,7 +605,7 @@
               <div class="muted">
                 Recapture cycle behavior:
                 <ul style="margin:8px 0 0 18px;padding:0">
-                  <li>When Level 1 balance is near zero and primary debt still exists, the model makes a new capital deployment based on available capacity.</li>
+                  <li>When the hidden Level 1 balance is near zero and primary debt still exists, the model makes a new capital deployment based on available capacity.</li>
                   <li>No additional deployment occurs until Level 1 is recaptured back down near zero again.</li>
                 </ul>
               </div>
@@ -637,7 +635,7 @@
             <div class="formula-list">
               <div class="formula">
                 <div class="title">Cash Flow Strength</div>
-                <div class="copy">The stronger the gap between deposits and monthly obligations, the faster Level 1 can be recaptured.</div>
+                <div class="copy">The stronger the gap between deposits and monthly obligations, the faster the hidden Level 1 balance can be recaptured.</div>
               </div>
               <div class="formula">
                 <div class="title">Deployment Size</div>
@@ -648,22 +646,6 @@
                 <div class="copy">The model uses fixed timing assumptions. Real-world posting schedules and account behavior can affect outcomes.</div>
               </div>
             </div>
-          </div>
-
-          <div class="aside-card">
-            <h3>Why “Level 1”</h3>
-            <p>
-              Level 1 is intentionally generic. In a broader strategy, multiple layers of capital may be involved, including liquidity reserves, cash-equivalent accounts, or other structured capital sources.
-            </p>
-          </div>
-
-          <div class="aside-card">
-            <h3>Best use</h3>
-            <ul>
-              <li>Compare strategic payoff paths before making a move</li>
-              <li>Test whether your cash flow can sustain a recapture cycle</li>
-              <li>Model how redeployment speed changes payoff outcomes</li>
-            </ul>
           </div>
 
           <div class="aside-card">
@@ -850,7 +832,7 @@
       return;
     }
     if (v.helocLimit <= 0){
-      warnEl.textContent = "Enter a valid Level 1 capacity.";
+      warnEl.textContent = "Model configuration error: Level 1 capacity must be greater than zero.";
       warnEl.classList.add("neg");
       return;
     }
@@ -900,13 +882,13 @@
     const approxNet = approxMonthlyIncome - v.monthlyExpenses - std.pmt;
 
     if (approxMonthlyIncome <= v.monthlyExpenses){
-      warnEl.textContent = "Warning: Approximate monthly income is less than or equal to monthly obligations. Level 1 utilization will likely rise and the recapture cycle may stall.";
+      warnEl.textContent = "Warning: Approximate monthly income is less than or equal to monthly obligations. The recapture cycle may stall under these conditions.";
       warnEl.classList.add("neg");
     } else if (approxNet <= 0){
-      warnEl.textContent = "Note: After monthly obligations and the primary payment, surplus looks small or negative. The recapture cycle may still work, but it may be slower and Level 1 utilization could remain elevated.";
+      warnEl.textContent = "Note: After monthly obligations and the primary payment, surplus appears small or negative. The recapture cycle may still work, but it may be slower and carry may remain elevated.";
       warnEl.classList.add("neg");
     } else {
-      warnEl.textContent = "Simulation complete. New deployments are only triggered after Level 1 is recaptured back down near zero.";
+      warnEl.textContent = "Simulation complete. New deployments are only triggered after the hidden Level 1 balance is recaptured back down near zero.";
       warnEl.classList.add("pos");
     }
 
