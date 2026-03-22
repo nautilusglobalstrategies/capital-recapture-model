@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Capital Recapture Model | Wealth Assistance</title>
+  <style>
+    :root{
+      --bg:#06080d;
+      --bg2:#0b0f17;
+      --panel:rgba(10,14,20,.80);
+      --panel-2:rgba(14,19,27,.90);
+      --glass:rgba(255,255,255,.04);
+      --glass-2:rgba(255,255,255,.02);
+      --line:rgba(214,164,92,.18);
+      --gold:#d6a45c;
+      --gold-soft:#f3d7a2;
+      --text:#f7f3ee;
+      --muted:#c1c7d4;
+      --muted-2:#9099aa;
+      --green:#38ef7d;
+      --green-deep:#11998e;
+      --blue:#667eea;
+      --purple:#764ba2;
+      --danger:#ef4444;
+      --success:#22c55e;
+      --shadow:0 20px 55px rgba(0,0,0,.45);
+      --radius:22px;
+      --radius-sm:14px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+
+    body{
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      background:
+        radial-gradient(circle at 14% 10%, rgba(214,164,92,.08), transparent 18%),
+        radial-gradient(circle at 84% 18%, rgba(102,126,234,.08), transparent 20%),
+        linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);
+      color:var(--text);
+      padding:22px;
+      min-height:100vh;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:48px 48px;
+      mask-image:radial-gradient(circle at center, black 30%, transparent 85%);
+      opacity:.28;
+    }
+
+    .shell{
+      max-width:1180px;
+      margin:auto;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero{
+      margin-bottom:18px;
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(214,164,92,.03));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .hero-inner{
+      padding:30px;
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      align-items:end;
+      flex-wrap:wrap;
+    }
+
+    .eyebrow{
+      color:var(--gold);
+      font-size:.78rem;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+      font-weight:800;
+    }
+
+    .hero h1{
+      font-family:Georgia,serif;
+      font-size:clamp(2rem,4vw,3.1rem);
+      line-height:1.04;
+      margin-bottom:12px;
+      max-width:820px;
+    }
+
+    .hero p{
+      color:var(--muted);
+      max-width:820px;
+      line-height:1.72;
+      font-size:1rem;
+    }
+
+    .hero-note{
+      min-width:280px;
+      max-width:360px;
+      padding:16px 18px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.24);
+      color:var(--muted);
+      line-height:1.6;
+      font-size:.92rem;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:var(--panel);
+      backdrop-filter:blur(10px);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .panel-head{
+      padding:18px 22px 0;
+    }
+
+    .panel-head h2{
+      font-family:Georgia,serif;
+      font-size:1.45rem;
+      margin-bottom:6px;
+    }
+
+    .panel-head p{
+      color:var(--muted-2);
+      line-height:1.6;
+      font-size:.95rem;
+    }
+
+    .content{
+      padding:20px 22px 22px;
+    }
+
+    .stack{
+      display:grid;
+      gap:14px;
+    }
+
+    .group{
+      padding:18px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);
+      background:
+        linear-gradient(180deg, var(--glass), var(--glass-2));
+    }
+
+    .group h3{
+      font-family:Georgia,serif;
+      font-size:1.08rem;
+      margin-bottom:12px;
+      color:var(--gold-soft);
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    label{
+      display:block;
+      font-weight:700;
+      margin:10px 0 7px;
+      font-size:.88rem;
+      color:var(--text);
+    }
+
+    input,select{
+      width:100%;
+      padding:13px 14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.26);
+      color:var(--text);
+      font-size:16px;
+      transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    input::placeholder{
+      color:#7b8494;
+    }
+
+    input:focus,select:focus{
+      outline:none;
+      border-color:rgba(214,164,92,.55);
+      box-shadow:0 0 0 3px rgba(214,164,92,.12);
+      background:rgba(0,0,0,.34);
+    }
+
+    .muted{
+      color:var(--muted-2);
+      font-size:.84rem;
+      line-height:1.55;
+      margin-top:10px;
+    }
+
+    .btn{
+      width:100%;
+      margin-top:4px;
+      padding:16px 18px;
+      border:none;
+      border-radius:16px;
+      background:linear-gradient(135deg,var(--gold),var(--gold-soft));
+      color:#16120f;
+      font-weight:900;
+      font-size:1rem;
+      letter-spacing:.01em;
+      cursor:pointer;
+      box-shadow:0 12px 26px rgba(214,164,92,.18);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+
+    .btn:hover{
+      filter:brightness(1.02);
+      box-shadow:0 16px 30px rgba(214,164,92,.22);
+    }
+
+    .btn:active{
+      transform:scale(.992);
+    }
+
+    .results{
+      display:none;
+      margin-top:14px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:var(--panel-2);
+      padding:18px;
+    }
+
+    .results h3{
+      font-family:Georgia,serif;
+      font-size:1.08rem;
+      margin-bottom:12px;
+      color:var(--gold-soft);
+    }
+
+    .kpi{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .card{
+      padding:14px;
+      border-radius:16px;
+      color:#fff;
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+    }
+
+    .green{background:linear-gradient(135deg,var(--green-deep) 0%,var(--green) 100%)}
+    .blue{background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%)}
+
+    .card .lbl{
+      opacity:.94;
+      font-size:.8rem;
+      letter-spacing:.02em;
+    }
+
+    .card .val{
+      font-size:1.2rem;
+      font-weight:900;
+      margin-top:5px;
+    }
+
+    .results-panel{
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:16px;
+      overflow:hidden;
+      background:rgba(255,255,255,.02);
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+    }
+
+    .table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:560px;
+    }
+
+    .table th,.table td{
+      border:1px solid rgba(255,255,255,.06);
+      padding:11px 10px;
+      text-align:center;
+      font-size:.88rem;
+      color:var(--muted);
+    }
+
+    .table th{
+      background:rgba(214,164,92,.10);
+      color:var(--text);
+      font-weight:800;
+    }
+
+    .table td:first-child{
+      color:var(--text);
+      font-weight:700;
+      background:rgba(255,255,255,.02);
+    }
+
+    .warn{
+      margin-top:12px;
+      font-size:.9rem;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .pos{color:var(--success)}
+    .neg{color:var(--danger)}
+
+    .aside-card{
+      padding:18px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);
+      background:
+        linear-gradient(180deg, var(--glass), var(--glass-2));
+      margin-bottom:14px;
+    }
+
+    .aside-card h3{
+      font-family:Georgia,serif;
+      font-size:1.02rem;
+      margin-bottom:10px;
+      color:var(--gold-soft);
+    }
+
+    .aside-card p,.aside-card li{
+      color:var(--muted);
+      line-height:1.65;
+      font-size:.93rem;
+    }
+
+    .aside-card ul{
+      padding-left:18px;
+      margin-top:10px;
+    }
+
+    .formula-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .formula{
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .formula .title{
+      font-size:.8rem;
+      color:var(--gold);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:5px;
+      font-weight:800;
+    }
+
+    .formula .copy{
+      font-size:.92rem;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .foot{
+      margin-top:14px;
+      color:var(--muted-2);
+      font-size:.82rem;
+      line-height:1.5;
+      text-align:center;
+    }
+
+    @media (max-width: 980px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 640px){
+      body{padding:14px}
+      .hero-inner,.content{padding:18px}
+      .row,.kpi{grid-template-columns:1fr}
+      .group{padding:16px}
+      .hero-note{max-width:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <div class="eyebrow">Standalone Strategy Tool</div>
+          <h1>Capital Recapture Model</h1>
+          <p>
+            A decision tool built around the <strong>Capital Recapture Engine™</strong> to model how capital can be recaptured, redeployed, and cycled to accelerate debt elimination.
+          </p>
+        </div>
+        <div class="hero-note">
+          <strong style="color:var(--gold-soft)">Purpose:</strong> compare a standard payoff path against a structured recapture cycle using Level 1 capital, deposit timing, and recurring obligations.
+        </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Inputs</h2>
+          <p>Enter your deposits, monthly obligations, debt profile, and Level 1 assumptions.</p>
+        </div>
+
+        <div class="content">
+          <div class="stack">
+
+            <div class="group">
+              <h3>Income Deposits</h3>
+
+              <div class="row">
+                <div>
+                  <label for="income1">Income #1 Amount</label>
+                  <input type="number" id="income1" placeholder="1500" inputmode="decimal">
+                </div>
+                <div>
+                  <label for="freq1">Income #1 Frequency</label>
+                  <select id="freq1">
+                    <option value="weekly" selected>Weekly</option>
+                    <option value="biweekly">Bi-weekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label for="income2">Income #2 Amount</label>
+                  <input type="number" id="income2" placeholder="2500" inputmode="decimal">
+                </div>
+                <div>
+                  <label for="freq2">Income #2 Frequency</label>
+                  <select id="freq2">
+                    <option value="weekly">Weekly</option>
+                    <option value="biweekly" selected>Bi-weekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label for="income3">Income #3 Amount</label>
+                  <input type="number" id="income3" placeholder="3500" inputmode="decimal">
+                </div>
+                <div>
+                  <label for="freq3">Income #3 Frequency</label>
+                  <select id="freq3">
+                    <option value="weekly">Weekly</option>
+                    <option value="biweekly">Bi-weekly</option>
+                    <option value="monthly" selected>Monthly</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="muted">
+                Deposits are modeled by frequency: weekly = every 7 days, bi-weekly = every 14 days, monthly = every 30 days.
+              </div>
+            </div>
+
+            <div class="group">
+              <h3>Monthly Obligations</h3>
+              <label for="monthlyExpenses">Total Monthly Expenses</label>
+              <input type="number" id="monthlyExpenses" placeholder="5200" inputmode="decimal">
+              <div class="muted">
+                Monthly obligations are withdrawn once per month on day 30, after deposits that day. Do not include the primary debt payment here.
+              </div>
+            </div>
+
+            <div class="group">
+              <h3>Primary Debt</h3>
+              <div class="row">
+                <div>
+                  <label for="mortBalance">Current Balance</label>
+                  <input type="number" id="mortBalance" placeholder="380000" inputmode="decimal">
+                </div>
+                <div>
+                  <label for="mortRate">Rate (%)</label>
+                  <input type="number" step="0.01" id="mortRate" placeholder="6.8" inputmode="decimal">
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label for="mortYears">Years Remaining</label>
+                  <input type="number" id="mortYears" placeholder="26" inputmode="decimal">
+                </div>
+                <div>
+                  <label for="mortPayDay">Payment Day</label>
+                  <select id="mortPayDay">
+                    <option value="1" selected>Day 1</option>
+                    <option value="15">Day 15</option>
+                    <option value="30">Day 30</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="muted">
+                Primary debt interest is modeled monthly using 30-day months. Standard payment is applied on the selected day.
+              </div>
+            </div>
+
+            <div class="group">
+              <h3>Level 1 Capital Layer</h3>
+              <div class="row">
+                <div>
+                  <label for="helocLimit">Level 1 Capacity</label>
+                  <input type="number" id="helocLimit" value="10000" inputmode="decimal">
+                </div>
+                <div>
+                  <label for="helocRate">Level 1 Cost (%)</label>
+                  <input type="number" step="0.01" id="helocRate" value="8" inputmode="decimal">
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label for="chunkPct">Deployment Size (% of Capacity)</label>
+                  <input type="number" id="chunkPct" value="50" min="1" max="100" inputmode="decimal">
+                </div>
+                <div>
+                  <label for="chunkMin">Minimum Deployment ($)</label>
+                  <input type="number" id="chunkMin" value="1000" inputmode="decimal">
+                </div>
+              </div>
+
+              <div class="muted">
+                Level 1 represents the first capital layer in the recapture cycle. A new deployment is only made after Level 1 is paid back down near zero.
+              </div>
+            </div>
+
+            <button class="btn" id="calcBtn">Run Capital Recapture Model</button>
+
+            <div class="results" id="results">
+              <h3>Results</h3>
+
+              <div class="kpi">
+                <div class="card green">
+                  <div class="lbl">Time Saved vs Standard</div>
+                  <div class="val"><span id="timeSaved">0.0</span> years</div>
+                </div>
+                <div class="card blue">
+                  <div class="lbl">Interest Savings vs Standard</div>
+                  <div class="val">$<span id="interestSaved">0</span></div>
+                </div>
+              </div>
+
+              <div class="results-panel table-wrap">
+                <table class="table">
+                  <tr>
+                    <th></th>
+                    <th>Standard Path</th>
+                    <th>Capital Recapture Path</th>
+                  </tr>
+                  <tr>
+                    <td>Payoff Time</td>
+                    <td><span id="stdYearsOut">0.0</span> yrs</td>
+                    <td><span id="velYearsOut">0.0</span> yrs</td>
+                  </tr>
+                  <tr>
+                    <td>Payment</td>
+                    <td>$<span id="stdPmtOut">0</span>/mo</td>
+                    <td>$<span id="stdPmtOut2">0</span>/mo</td>
+                  </tr>
+                  <tr>
+                    <td>Total Interest</td>
+                    <td>$<span id="stdIntOut">0</span></td>
+                    <td>$<span id="velIntOut">0</span></td>
+                  </tr>
+                </table>
+              </div>
+
+              <div class="muted">
+                Recapture cycle behavior:
+                <ul style="margin:8px 0 0 18px;padding:0">
+                  <li>When Level 1 balance is near zero and primary debt still exists, the model makes a new capital deployment based on available capacity.</li>
+                  <li>No additional deployment occurs until Level 1 is recaptured back down near zero again.</li>
+                </ul>
+              </div>
+
+              <div class="warn" id="warn"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panel-head">
+          <h2>How to use the model</h2>
+          <p>This page is built to help serious users think more clearly about structure, flow, and recapture timing.</p>
+        </div>
+
+        <div class="content">
+          <div class="aside-card">
+            <h3>What this models</h3>
+            <p>
+              This model compares a standard payoff path against the <strong>Capital Recapture Engine™</strong>, where capital is repeatedly deployed and recaptured through a structured cycle.
+            </p>
+          </div>
+
+          <div class="aside-card">
+            <h3>Core drivers</h3>
+            <div class="formula-list">
+              <div class="formula">
+                <div class="title">Cash Flow Strength</div>
+                <div class="copy">The stronger the gap between deposits and monthly obligations, the faster Level 1 can be recaptured.</div>
+              </div>
+              <div class="formula">
+                <div class="title">Deployment Size</div>
+                <div class="copy">Larger deployments may reduce principal faster, but they can also increase carry and slow the reset cycle.</div>
+              </div>
+              <div class="formula">
+                <div class="title">Timing Matters</div>
+                <div class="copy">The model uses fixed timing assumptions. Real-world posting schedules and account behavior can affect outcomes.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="aside-card">
+            <h3>Why “Level 1”</h3>
+            <p>
+              Level 1 is intentionally generic. In a broader strategy, multiple layers of capital may be involved, including liquidity reserves, cash-equivalent accounts, or other structured capital sources.
+            </p>
+          </div>
+
+          <div class="aside-card">
+            <h3>Best use</h3>
+            <ul>
+              <li>Compare strategic payoff paths before making a move</li>
+              <li>Test whether your cash flow can sustain a recapture cycle</li>
+              <li>Model how redeployment speed changes payoff outcomes</li>
+            </ul>
+          </div>
+
+          <div class="aside-card">
+            <h3>Important note</h3>
+            <p>
+              This is a planning model. It is useful for strategy comparison, but it does not replace lender-specific amortization, posting rules, or formal underwriting review.
+            </p>
+          </div>
+
+          <div class="foot">
+            Wealth Assistance · Capital Recapture Engine™
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const DAYS_PER_MONTH = 30;
+  const DAYS_PER_YEAR  = 365;
+  const MAX_DAYS       = 365 * 80;
+  const ZERO_EPS       = 1.00;
+
+  function n(x){ const v = parseFloat(x); return isFinite(v) ? v : 0; }
+  function fmt0(x){ return Math.round(x).toLocaleString(); }
+  function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+
+  function stdMortgagePayment(P, annualRatePct, years){
+    const r = (annualRatePct/100)/12;
+    const m = Math.max(1, Math.round(years*12));
+    if (r <= 0) return P / m;
+    return P * (r * Math.pow(1+r, m)) / (Math.pow(1+r, m) - 1);
+  }
+
+  function runStandardMortgage(P0, annualRatePct, years){
+    const r = (annualRatePct/100)/12;
+    const pmt = stdMortgagePayment(P0, annualRatePct, years);
+    let bal = P0, months = 0, interest = 0;
+    const maxMonths = Math.min(12*80, Math.round(years*12) + 12*10);
+
+    while (bal > 0.01 && months < maxMonths){
+      const i = bal * r;
+      interest += i;
+      let principal = pmt - i;
+      if (principal < 0) principal = 0;
+      bal -= Math.min(principal, bal);
+      months++;
+    }
+    return { months, interest, pmt };
+  }
+
+  function runRecaptureCycle({
+    mortBalance0, mortRatePct, mortYears, mortPayDay,
+    level1Capacity, level1CostPct, deployPct, deployMin,
+    monthlyExpenses,
+    incomes
+  }){
+    const mortMonthlyRate = (mortRatePct/100)/12;
+    const level1DailyRate = (level1CostPct/100)/DAYS_PER_YEAR;
+    const mortPmt = stdMortgagePayment(mortBalance0, mortRatePct, mortYears);
+
+    const freqToPeriodDays = (freq) => {
+      if (freq === "weekly") return 7;
+      if (freq === "biweekly") return 14;
+      return DAYS_PER_MONTH;
+    };
+
+    const streams = incomes.map(s => ({
+      amt: Math.max(0, n(s.amt)),
+      period: freqToPeriodDays(s.freq),
+      next: 1
+    }));
+
+    let mortBal = mortBalance0;
+    let level1Bal = 0;
+
+    let totalMortInt = 0;
+    let totalLevel1Int = 0;
+
+    let day = 0;
+
+    while ((mortBal > 0.01 || level1Bal > 0.01) && day < MAX_DAYS){
+      day++;
+      const dayOfMonth = ((day - 1) % DAYS_PER_MONTH) + 1;
+
+      if (level1Bal > 0){
+        const i = level1Bal * level1DailyRate;
+        totalLevel1Int += i;
+        level1Bal += i;
+      }
+
+      let depositsToday = 0;
+      for (const st of streams){
+        if (st.amt <= 0) continue;
+        if (day === st.next){
+          depositsToday += st.amt;
+          st.next += st.period;
+        }
+      }
+      if (depositsToday > 0){
+        level1Bal = Math.max(0, level1Bal - depositsToday);
+      }
+
+      if (dayOfMonth === 1 && mortBal > 0){
+        const mi = mortBal * mortMonthlyRate;
+        totalMortInt += mi;
+        mortBal += mi;
+      }
+
+      if (mortBal > 0 && level1Bal <= ZERO_EPS){
+        const available = Math.max(0, level1Capacity - level1Bal);
+        const pct = clamp(n(deployPct)/100, 0, 1);
+        let deployment = available * pct;
+        deployment = Math.min(deployment, mortBal);
+        if (deployment >= n(deployMin) && deployment > 0){
+          level1Bal += deployment;
+          mortBal  -= deployment;
+        }
+      }
+
+      if (dayOfMonth === n(mortPayDay) && mortBal > 0){
+        const pay = Math.min(mortPmt, mortBal);
+        level1Bal += pay;
+        mortBal  -= pay;
+      }
+
+      if (dayOfMonth === DAYS_PER_MONTH && monthlyExpenses > 0){
+        level1Bal += monthlyExpenses;
+      }
+
+      if (mortBal < 0.01) mortBal = 0;
+      if (level1Bal < 0.01) level1Bal = 0;
+
+      if (level1Bal >= level1Capacity - 0.01 && day > 120){
+        const anyIncome = streams.some(s => s.amt > 0);
+        if (!anyIncome) break;
+      }
+    }
+
+    return {
+      days: day,
+      years: day / DAYS_PER_YEAR,
+      mortPmt,
+      totalInterest: totalMortInt + totalLevel1Int,
+      mortInterest: totalMortInt,
+      level1Interest: totalLevel1Int,
+      endedWith: { mortBal, level1Bal }
+    };
+  }
+
+  function getInputs(){
+    return {
+      income1: n(document.getElementById("income1").value),
+      freq1: document.getElementById("freq1").value,
+      income2: n(document.getElementById("income2").value),
+      freq2: document.getElementById("freq2").value,
+      income3: n(document.getElementById("income3").value),
+      freq3: document.getElementById("freq3").value,
+
+      monthlyExpenses: n(document.getElementById("monthlyExpenses").value),
+
+      mortBalance: n(document.getElementById("mortBalance").value),
+      mortRate: n(document.getElementById("mortRate").value),
+      mortYears: n(document.getElementById("mortYears").value),
+      mortPayDay: n(document.getElementById("mortPayDay").value),
+
+      helocLimit: n(document.getElementById("helocLimit").value),
+      helocRate: n(document.getElementById("helocRate").value),
+      chunkPct: n(document.getElementById("chunkPct").value),
+      chunkMin: n(document.getElementById("chunkMin").value),
+    };
+  }
+
+  function calc(){
+    const v = getInputs();
+    const warnEl = document.getElementById("warn");
+    warnEl.textContent = "";
+    warnEl.className = "warn";
+
+    if (v.mortBalance <= 0 || v.mortYears <= 0){
+      warnEl.textContent = "Enter a valid primary debt balance and years remaining.";
+      warnEl.classList.add("neg");
+      return;
+    }
+    if (v.helocLimit <= 0){
+      warnEl.textContent = "Enter a valid Level 1 capacity.";
+      warnEl.classList.add("neg");
+      return;
+    }
+
+    const incomes = [
+      { amt: v.income1, freq: v.freq1 },
+      { amt: v.income2, freq: v.freq2 },
+      { amt: v.income3, freq: v.freq3 },
+    ];
+
+    const approxMonthlyIncome =
+      (v.freq1==="weekly"? v.income1*4.333 : v.freq1==="biweekly"? v.income1*2.167 : v.income1) +
+      (v.freq2==="weekly"? v.income2*4.333 : v.freq2==="biweekly"? v.income2*2.167 : v.income2) +
+      (v.freq3==="weekly"? v.income3*4.333 : v.freq3==="biweekly"? v.income3*2.167 : v.income3);
+
+    const std = runStandardMortgage(v.mortBalance, v.mortRate, v.mortYears);
+    const stdYears = std.months / 12;
+
+    const recapture = runRecaptureCycle({
+      mortBalance0: v.mortBalance,
+      mortRatePct: v.mortRate,
+      mortYears: v.mortYears,
+      mortPayDay: v.mortPayDay,
+      level1Capacity: v.helocLimit,
+      level1CostPct: v.helocRate,
+      deployPct: v.chunkPct,
+      deployMin: v.chunkMin,
+      monthlyExpenses: v.monthlyExpenses,
+      incomes
+    });
+
+    const recYears = recapture.years;
+    const timeSaved = Math.max(0, stdYears - recYears);
+    const interestSaved = Math.max(0, std.interest - recapture.totalInterest);
+
+    document.getElementById("stdYearsOut").textContent = stdYears.toFixed(1);
+    document.getElementById("velYearsOut").textContent = recYears.toFixed(1);
+    document.getElementById("timeSaved").textContent = timeSaved.toFixed(1);
+
+    document.getElementById("stdPmtOut").textContent = fmt0(std.pmt);
+    document.getElementById("stdPmtOut2").textContent = fmt0(std.pmt);
+
+    document.getElementById("stdIntOut").textContent = fmt0(std.interest);
+    document.getElementById("velIntOut").textContent = fmt0(recapture.totalInterest);
+    document.getElementById("interestSaved").textContent = fmt0(interestSaved);
+
+    const approxNet = approxMonthlyIncome - v.monthlyExpenses - std.pmt;
+
+    if (approxMonthlyIncome <= v.monthlyExpenses){
+      warnEl.textContent = "Warning: Approximate monthly income is less than or equal to monthly obligations. Level 1 utilization will likely rise and the recapture cycle may stall.";
+      warnEl.classList.add("neg");
+    } else if (approxNet <= 0){
+      warnEl.textContent = "Note: After monthly obligations and the primary payment, surplus looks small or negative. The recapture cycle may still work, but it may be slower and Level 1 utilization could remain elevated.";
+      warnEl.classList.add("neg");
+    } else {
+      warnEl.textContent = "Simulation complete. New deployments are only triggered after Level 1 is recaptured back down near zero.";
+      warnEl.classList.add("pos");
+    }
+
+    const r = document.getElementById("results");
+    r.style.display = "block";
+    r.scrollIntoView({behavior:"smooth", block:"nearest"});
+  }
+
+  document.getElementById("calcBtn").addEventListener("click", calc);
+})();
+</script>
+</body>
+</html>
