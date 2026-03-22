@@ -221,6 +221,7 @@
       cursor:pointer;
       box-shadow:0 12px 26px rgba(214,164,92,.18);
       transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+      text-decoration:none;
     }
 
     .btn:hover{
@@ -230,13 +231,6 @@
 
     .btn:active{
       transform:scale(.992);
-    }
-
-    .btn.secondary{
-      background:rgba(0,0,0,.3);
-      color:var(--gold-soft);
-      border:1px solid rgba(214,164,92,.35);
-      box-shadow:none;
     }
 
     .results{
@@ -351,6 +345,10 @@
       display:none;
     }
 
+    .consultation-cta{
+      margin-top:16px;
+    }
+
     .foot{
       margin-top:14px;
       color:var(--muted-2);
@@ -381,7 +379,7 @@
           </p>
         </div>
         <div class="hero-note">
-          <strong style="color:var(--gold-soft)">Access flow:</strong> enter your contact information first, then unlock the model. When you apply the engine, your lead details and scenario results can be sent through a webhook to your CRM workflow.
+          <strong style="color:var(--gold-soft)">Access flow:</strong> enter your contact information first, then unlock the model.
         </div>
       </div>
     </section>
@@ -409,13 +407,7 @@
               <label for="leadPhone">Phone</label>
               <input type="text" id="leadPhone" placeholder="Your phone number">
             </div>
-            <div>
-              <label for="leadConsent">Permission</label>
-              <select id="leadConsent">
-                <option value="yes" selected>I agree to be contacted</option>
-                <option value="no">Do not contact me</option>
-              </select>
-            </div>
+            <div></div>
           </div>
 
           <button class="btn" id="unlockBtn" type="button">Unlock Capital Recapture Model</button>
@@ -423,7 +415,7 @@
         </div>
 
         <div class="locked-note">
-          The model remains hidden until contact information is entered. When the engine is applied, your contact details and scenario results can be sent through your webhook workflow for CRM follow-up.
+          The model remains hidden until contact information is entered.
         </div>
       </div>
     </section>
@@ -607,6 +599,10 @@
           </div>
 
           <div class="warn" id="warn"></div>
+
+          <div class="consultation-cta">
+            <a href="https://wealthassistance.us/contact.html" class="btn">Request Private Consultation</a>
+          </div>
         </div>
 
         <div class="foot">
@@ -755,8 +751,7 @@
     return {
       name: document.getElementById("leadName").value.trim(),
       email: document.getElementById("leadEmail").value.trim(),
-      phone: document.getElementById("leadPhone").value.trim(),
-      consent: document.getElementById("leadConsent").value
+      phone: document.getElementById("leadPhone").value.trim()
     };
   }
 
