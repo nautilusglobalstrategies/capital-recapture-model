@@ -8,8 +8,8 @@
     :root{
       --bg:#06080d;
       --bg2:#0b0f17;
-      --panel:rgba(10,14,20,.80);
-      --panel-2:rgba(14,19,27,.90);
+      --panel:rgba(10,14,20,.82);
+      --panel-2:rgba(14,19,27,.92);
       --glass:rgba(255,255,255,.04);
       --glass-2:rgba(255,255,255,.02);
       --line:rgba(214,164,92,.18);
@@ -55,7 +55,7 @@
     }
 
     .shell{
-      max-width:1180px;
+      max-width:1220px;
       margin:auto;
       position:relative;
       z-index:1;
@@ -106,7 +106,7 @@
 
     .hero-note{
       min-width:280px;
-      max-width:360px;
+      max-width:380px;
       padding:16px 18px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.08);
@@ -118,7 +118,7 @@
 
     .layout{
       display:grid;
-      grid-template-columns:1.15fr .85fr;
+      grid-template-columns:1.08fr .92fr;
       gap:18px;
       align-items:start;
     }
@@ -294,6 +294,7 @@
       border-radius:16px;
       overflow:hidden;
       background:rgba(255,255,255,.02);
+      margin-bottom:14px;
     }
 
     .table-wrap{
@@ -390,6 +391,90 @@
       line-height:1.6;
     }
 
+    .chart-panel{
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:16px;
+      background:rgba(255,255,255,.02);
+      padding:14px;
+      margin-bottom:14px;
+    }
+
+    .chart-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+
+    .chart-title{
+      color:var(--gold-soft);
+      font-family:Georgia,serif;
+      font-size:1rem;
+    }
+
+    .legend{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      font-size:.82rem;
+      color:var(--muted);
+    }
+
+    .legend span{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .swatch{
+      width:14px;
+      height:3px;
+      border-radius:999px;
+      display:inline-block;
+    }
+
+    .lead-box{
+      margin-top:14px;
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:16px;
+      background:rgba(255,255,255,.02);
+      padding:16px;
+    }
+
+    .lead-box h4{
+      font-family:Georgia,serif;
+      color:var(--gold-soft);
+      margin-bottom:10px;
+      font-size:1rem;
+    }
+
+    .lead-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .secondary-btn{
+      width:100%;
+      padding:14px 18px;
+      border:1px solid rgba(214,164,92,.35);
+      border-radius:14px;
+      background:rgba(0,0,0,.25);
+      color:var(--gold-soft);
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .crm-status{
+      margin-top:10px;
+      font-size:.88rem;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
     .foot{
       margin-top:14px;
       color:var(--muted-2);
@@ -407,7 +492,7 @@
     @media (max-width: 640px){
       body{padding:14px}
       .hero-inner,.content{padding:18px}
-      .row,.kpi{grid-template-columns:1fr}
+      .row,.kpi,.lead-actions{grid-template-columns:1fr}
       .group{padding:16px}
       .hero-note{max-width:none}
     }
@@ -490,7 +575,7 @@
               </div>
 
               <div class="muted">
-                Deposits are modeled by frequency: weekly = every 7 days, bi-weekly = every 14 days, monthly = every 30 days.
+                Deposits are modeled by actual date frequency: weekly = every 7 days, bi-weekly = every 14 days, monthly = same day each month when possible.
               </div>
             </div>
 
@@ -499,7 +584,7 @@
               <label for="monthlyExpenses">Total Monthly Expenses</label>
               <input type="number" id="monthlyExpenses" placeholder="5200" inputmode="decimal">
               <div class="muted">
-                Monthly obligations are withdrawn once per month on day 30, after deposits that day. Do not include the primary debt payment here.
+                Monthly obligations are withdrawn on the last day of each month, after deposits that day. Do not include the primary debt payment here.
               </div>
             </div>
 
@@ -526,13 +611,13 @@
                   <select id="mortPayDay">
                     <option value="1" selected>Day 1</option>
                     <option value="15">Day 15</option>
-                    <option value="30">Day 30</option>
+                    <option value="28">Day 28</option>
                   </select>
                 </div>
               </div>
 
               <div class="muted">
-                Primary debt interest is modeled monthly using 30-day months. Standard payment is applied on the selected day.
+                The model uses daily accrual and real calendar months. Standard payment is applied on the selected day each month.
               </div>
             </div>
 
@@ -540,23 +625,23 @@
               <h3>Level 1 Capital Layer</h3>
               <div class="row">
                 <div>
-                  <label for="helocLimit">Level 1 Capacity</label>
-                  <input type="number" id="helocLimit" value="10000" inputmode="decimal">
+                  <label for="level1Capacity">Level 1 Capacity</label>
+                  <input type="number" id="level1Capacity" value="10000" inputmode="decimal">
                 </div>
                 <div>
-                  <label for="helocRate">Level 1 Cost (%)</label>
-                  <input type="number" step="0.01" id="helocRate" value="8" inputmode="decimal">
+                  <label for="level1Cost">Level 1 Cost (%)</label>
+                  <input type="number" step="0.01" id="level1Cost" value="8" inputmode="decimal">
                 </div>
               </div>
 
               <div class="row">
                 <div>
-                  <label for="chunkPct">Deployment Size (% of Capacity)</label>
-                  <input type="number" id="chunkPct" value="50" min="1" max="100" inputmode="decimal">
+                  <label for="deployPct">Deployment Size (% of Capacity)</label>
+                  <input type="number" id="deployPct" value="50" min="1" max="100" inputmode="decimal">
                 </div>
                 <div>
-                  <label for="chunkMin">Minimum Deployment ($)</label>
-                  <input type="number" id="chunkMin" value="1000" inputmode="decimal">
+                  <label for="deployMin">Minimum Deployment ($)</label>
+                  <input type="number" id="deployMin" value="1000" inputmode="decimal">
                 </div>
               </div>
             </div>
@@ -587,7 +672,7 @@
                   <tr>
                     <td>Payoff Time</td>
                     <td><span id="stdYearsOut">0.0</span> yrs</td>
-                    <td><span id="velYearsOut">0.0</span> yrs</td>
+                    <td><span id="recYearsOut">0.0</span> yrs</td>
                   </tr>
                   <tr>
                     <td>Payment</td>
@@ -597,9 +682,31 @@
                   <tr>
                     <td>Total Interest</td>
                     <td>$<span id="stdIntOut">0</span></td>
-                    <td>$<span id="velIntOut">0</span></td>
+                    <td>$<span id="recIntOut">0</span></td>
                   </tr>
                 </table>
+              </div>
+
+              <div class="chart-panel">
+                <div class="chart-head">
+                  <div class="chart-title">Balance Comparison</div>
+                  <div class="legend">
+                    <span><i class="swatch" style="background:#d6a45c"></i>Standard</span>
+                    <span><i class="swatch" style="background:#667eea"></i>Capital Recapture</span>
+                  </div>
+                </div>
+                <svg id="balanceChart" viewBox="0 0 760 280" width="100%" height="auto" aria-label="Balance chart"></svg>
+              </div>
+
+              <div class="chart-panel">
+                <div class="chart-head">
+                  <div class="chart-title">Estimated Interest Accumulation</div>
+                  <div class="legend">
+                    <span><i class="swatch" style="background:#d6a45c"></i>Standard</span>
+                    <span><i class="swatch" style="background:#38ef7d"></i>Capital Recapture</span>
+                  </div>
+                </div>
+                <svg id="interestChart" viewBox="0 0 760 280" width="100%" height="auto" aria-label="Interest chart"></svg>
               </div>
 
               <div class="muted">
@@ -611,6 +718,38 @@
               </div>
 
               <div class="warn" id="warn"></div>
+
+              <div class="lead-box">
+                <h4>Save or submit this result</h4>
+                <div class="row">
+                  <div>
+                    <label for="leadName">Name</label>
+                    <input type="text" id="leadName" placeholder="Your name">
+                  </div>
+                  <div>
+                    <label for="leadEmail">Email</label>
+                    <input type="email" id="leadEmail" placeholder="you@example.com">
+                  </div>
+                </div>
+                <div class="row">
+                  <div>
+                    <label for="leadPhone">Phone</label>
+                    <input type="text" id="leadPhone" placeholder="Optional">
+                  </div>
+                  <div>
+                    <label for="leadConsent">Permission</label>
+                    <select id="leadConsent">
+                      <option value="yes" selected>I agree to be contacted</option>
+                      <option value="no">Do not contact me</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="lead-actions">
+                  <button class="secondary-btn" id="saveLeadBtn" type="button">Save Result</button>
+                  <button class="secondary-btn" id="sendLeadBtn" type="button">Send to CRM</button>
+                </div>
+                <div class="crm-status" id="crmStatus">No submission yet.</div>
+              </div>
             </div>
           </div>
         </div>
@@ -618,8 +757,8 @@
 
       <aside class="panel">
         <div class="panel-head">
-          <h2>How to use the model</h2>
-          <p>This page is built to help serious users think more clearly about structure, flow, and recapture timing.</p>
+          <h2>Model notes</h2>
+          <p>This version uses a more precise accrual engine and includes charting plus lead capture.</p>
         </div>
 
         <div class="content">
@@ -631,21 +770,30 @@
           </div>
 
           <div class="aside-card">
-            <h3>Core drivers</h3>
+            <h3>Engine upgrades</h3>
             <div class="formula-list">
               <div class="formula">
-                <div class="title">Cash Flow Strength</div>
-                <div class="copy">The stronger the gap between deposits and monthly obligations, the faster the hidden Level 1 balance can be recaptured.</div>
+                <div class="title">Daily Accrual</div>
+                <div class="copy">Both paths accrue interest daily rather than relying on simplified 30-day monthly math.</div>
               </div>
               <div class="formula">
-                <div class="title">Deployment Size</div>
-                <div class="copy">Larger deployments may reduce principal faster, but they can also increase carry and slow the reset cycle.</div>
+                <div class="title">Real Calendar Dates</div>
+                <div class="copy">Monthly events follow actual calendar months and day counts, improving timing realism.</div>
               </div>
               <div class="formula">
-                <div class="title">Timing Matters</div>
-                <div class="copy">The model uses fixed timing assumptions. Real-world posting schedules and account behavior can affect outcomes.</div>
+                <div class="title">Interactive Visualization</div>
+                <div class="copy">Charts show how balances and interest paths diverge over time.</div>
               </div>
             </div>
+          </div>
+
+          <div class="aside-card">
+            <h3>Lead capture and CRM</h3>
+            <ul>
+              <li>Save the result locally for follow-up</li>
+              <li>Send structured result data to a webhook</li>
+              <li>Use the webhook to connect into your CRM later</li>
+            </ul>
           </div>
 
           <div class="aside-card">
@@ -665,136 +813,345 @@
 
 <script>
 (function(){
-  const DAYS_PER_MONTH = 30;
-  const DAYS_PER_YEAR  = 365;
-  const MAX_DAYS       = 365 * 80;
-  const ZERO_EPS       = 1.00;
+  const WEBHOOK_URL = ""; // paste your CRM/webhook URL here later
+  const MAX_YEARS = 80;
+  const ZERO_EPS = 1;
+
+  let latestPayload = null;
 
   function n(x){ const v = parseFloat(x); return isFinite(v) ? v : 0; }
   function fmt0(x){ return Math.round(x).toLocaleString(); }
+  function fmt1(x){ return Number(x).toFixed(1); }
   function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
 
-  function stdMortgagePayment(P, annualRatePct, years){
-    const r = (annualRatePct/100)/12;
-    const m = Math.max(1, Math.round(years*12));
-    if (r <= 0) return P / m;
-    return P * (r * Math.pow(1+r, m)) / (Math.pow(1+r, m) - 1);
+  function addDays(date, days){
+    const d = new Date(date);
+    d.setDate(d.getDate() + days);
+    return d;
   }
 
-  function runStandardMortgage(P0, annualRatePct, years){
-    const r = (annualRatePct/100)/12;
-    const pmt = stdMortgagePayment(P0, annualRatePct, years);
-    let bal = P0, months = 0, interest = 0;
-    const maxMonths = Math.min(12*80, Math.round(years*12) + 12*10);
+  function endOfMonth(date){
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  }
 
-    while (bal > 0.01 && months < maxMonths){
-      const i = bal * r;
-      interest += i;
-      let principal = pmt - i;
-      if (principal < 0) principal = 0;
-      bal -= Math.min(principal, bal);
-      months++;
+  function nextMonthlyDate(baseDay, fromDate){
+    const y = fromDate.getFullYear();
+    const m = fromDate.getMonth();
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
+    const day = Math.min(baseDay, daysInMonth);
+    const candidate = new Date(y, m, day);
+    if (candidate > fromDate) return candidate;
+    const nextMonthDays = new Date(y, m + 2, 0).getDate();
+    const nextDay = Math.min(baseDay, nextMonthDays);
+    return new Date(y, m + 1, nextDay);
+  }
+
+  function monthlyPayment(principal, annualRatePct, years){
+    const r = (annualRatePct / 100) / 12;
+    const months = Math.max(1, Math.round(years * 12));
+    if (r <= 0) return principal / months;
+    return principal * (r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+  }
+
+  function setupIncomeStreams(startDate, incomes){
+    const streams = [];
+    for (const inc of incomes){
+      const amt = Math.max(0, n(inc.amt));
+      if (!amt) continue;
+      if (inc.freq === "weekly"){
+        streams.push({ amt, freq:"weekly", nextDate:addDays(startDate, 1) });
+      } else if (inc.freq === "biweekly"){
+        streams.push({ amt, freq:"biweekly", nextDate:addDays(startDate, 1) });
+      } else {
+        streams.push({ amt, freq:"monthly", baseDay:startDate.getDate(), nextDate:nextMonthlyDate(startDate.getDate(), addDays(startDate, -1)) });
+      }
     }
-    return { months, interest, pmt };
+    return streams;
   }
 
-  function runRecaptureCycle({
-    mortBalance0, mortRatePct, mortYears, mortPayDay,
-    level1Capacity, level1CostPct, deployPct, deployMin,
-    monthlyExpenses,
-    incomes
-  }){
-    const mortMonthlyRate = (mortRatePct/100)/12;
-    const level1DailyRate = (level1CostPct/100)/DAYS_PER_YEAR;
-    const mortPmt = stdMortgagePayment(mortBalance0, mortRatePct, mortYears);
+  function advanceIncomeStream(stream){
+    if (stream.freq === "weekly"){
+      stream.nextDate = addDays(stream.nextDate, 7);
+    } else if (stream.freq === "biweekly"){
+      stream.nextDate = addDays(stream.nextDate, 14);
+    } else {
+      stream.nextDate = nextMonthlyDate(stream.baseDay, stream.nextDate);
+    }
+  }
 
-    const freqToPeriodDays = (freq) => {
-      if (freq === "weekly") return 7;
-      if (freq === "biweekly") return 14;
-      return DAYS_PER_MONTH;
+  function sameDay(a,b){
+    return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+  }
+
+  function runStandardScenario({ startDate, debtBalance, debtRatePct, yearsRemaining, paymentDay }){
+    let bal = debtBalance;
+    let totalInterest = 0;
+    const pay = monthlyPayment(debtBalance, debtRatePct, yearsRemaining);
+    const dailyRate = (debtRatePct / 100) / 365;
+    let date = new Date(startDate);
+    const endDate = new Date(startDate);
+    endDate.setFullYear(endDate.getFullYear() + MAX_YEARS);
+
+    const monthlySeries = [];
+    let monthKey = `${date.getFullYear()}-${date.getMonth()}`;
+
+    while (bal > 0.01 && date <= endDate){
+      if (bal > 0){
+        const interest = bal * dailyRate;
+        totalInterest += interest;
+        bal += interest;
+      }
+
+      const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+      const effectivePayDay = Math.min(paymentDay, daysInMonth);
+      if (date.getDate() === effectivePayDay && bal > 0){
+        const applied = Math.min(pay, bal);
+        bal -= applied;
+      }
+
+      const currentMonthKey = `${date.getFullYear()}-${date.getMonth()}`;
+      if (currentMonthKey !== monthKey){
+        monthlySeries.push({
+          date: new Date(date.getFullYear(), date.getMonth(), 1),
+          balance: Math.max(0, bal),
+          interest: totalInterest
+        });
+        monthKey = currentMonthKey;
+      }
+
+      date = addDays(date, 1);
+    }
+
+    monthlySeries.push({
+      date: new Date(date.getFullYear(), date.getMonth(), 1),
+      balance: Math.max(0, bal),
+      interest: totalInterest
+    });
+
+    const years = Math.max(0, (date - startDate) / (365.25 * 24 * 60 * 60 * 1000));
+
+    return {
+      years,
+      payment: pay,
+      totalInterest,
+      payoffDate: date,
+      series: monthlySeries
     };
+  }
 
-    const streams = incomes.map(s => ({
-      amt: Math.max(0, n(s.amt)),
-      period: freqToPeriodDays(s.freq),
-      next: 1
-    }));
-
-    let mortBal = mortBalance0;
+  function runRecaptureScenario({
+    startDate,
+    debtBalance,
+    debtRatePct,
+    yearsRemaining,
+    paymentDay,
+    monthlyExpenses,
+    incomes,
+    level1Capacity,
+    level1CostPct,
+    deployPct,
+    deployMin
+  }){
+    let debtBal = debtBalance;
     let level1Bal = 0;
+    let totalDebtInterest = 0;
+    let totalLevel1Interest = 0;
+    const pay = monthlyPayment(debtBalance, debtRatePct, yearsRemaining);
+    const debtDailyRate = (debtRatePct / 100) / 365;
+    const level1DailyRate = (level1CostPct / 100) / 365;
 
-    let totalMortInt = 0;
-    let totalLevel1Int = 0;
+    const streams = setupIncomeStreams(startDate, incomes);
+    let date = new Date(startDate);
+    const endDate = new Date(startDate);
+    endDate.setFullYear(endDate.getFullYear() + MAX_YEARS);
 
-    let day = 0;
+    const monthlySeries = [];
+    let monthKey = `${date.getFullYear()}-${date.getMonth()}`;
 
-    while ((mortBal > 0.01 || level1Bal > 0.01) && day < MAX_DAYS){
-      day++;
-      const dayOfMonth = ((day - 1) % DAYS_PER_MONTH) + 1;
+    while ((debtBal > 0.01 || level1Bal > 0.01) && date <= endDate){
+      if (debtBal > 0){
+        const interest = debtBal * debtDailyRate;
+        totalDebtInterest += interest;
+        debtBal += interest;
+      }
 
       if (level1Bal > 0){
         const i = level1Bal * level1DailyRate;
-        totalLevel1Int += i;
+        totalLevel1Interest += i;
         level1Bal += i;
       }
 
-      let depositsToday = 0;
-      for (const st of streams){
-        if (st.amt <= 0) continue;
-        if (day === st.next){
-          depositsToday += st.amt;
-          st.next += st.period;
+      for (const stream of streams){
+        if (sameDay(stream.nextDate, date)){
+          level1Bal = Math.max(0, level1Bal - stream.amt);
+          advanceIncomeStream(stream);
         }
       }
-      if (depositsToday > 0){
-        level1Bal = Math.max(0, level1Bal - depositsToday);
-      }
 
-      if (dayOfMonth === 1 && mortBal > 0){
-        const mi = mortBal * mortMonthlyRate;
-        totalMortInt += mi;
-        mortBal += mi;
-      }
+      const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+      const effectivePayDay = Math.min(paymentDay, daysInMonth);
 
-      if (mortBal > 0 && level1Bal <= ZERO_EPS){
+      if (debtBal > 0 && level1Bal <= ZERO_EPS){
         const available = Math.max(0, level1Capacity - level1Bal);
-        const pct = clamp(n(deployPct)/100, 0, 1);
-        let deployment = available * pct;
-        deployment = Math.min(deployment, mortBal);
-        if (deployment >= n(deployMin) && deployment > 0){
+        let deployment = available * clamp(deployPct / 100, 0, 1);
+        deployment = Math.min(deployment, debtBal);
+        if (deployment >= deployMin && deployment > 0){
           level1Bal += deployment;
-          mortBal  -= deployment;
+          debtBal -= deployment;
         }
       }
 
-      if (dayOfMonth === n(mortPayDay) && mortBal > 0){
-        const pay = Math.min(mortPmt, mortBal);
-        level1Bal += pay;
-        mortBal  -= pay;
+      if (date.getDate() === effectivePayDay && debtBal > 0){
+        const applied = Math.min(pay, debtBal);
+        level1Bal += applied;
+        debtBal -= applied;
       }
 
-      if (dayOfMonth === DAYS_PER_MONTH && monthlyExpenses > 0){
+      if (date.getDate() === daysInMonth && monthlyExpenses > 0){
         level1Bal += monthlyExpenses;
       }
 
-      if (mortBal < 0.01) mortBal = 0;
+      if (debtBal < 0.01) debtBal = 0;
       if (level1Bal < 0.01) level1Bal = 0;
 
-      if (level1Bal >= level1Capacity - 0.01 && day > 120){
-        const anyIncome = streams.some(s => s.amt > 0);
-        if (!anyIncome) break;
+      const currentMonthKey = `${date.getFullYear()}-${date.getMonth()}`;
+      if (currentMonthKey !== monthKey){
+        monthlySeries.push({
+          date: new Date(date.getFullYear(), date.getMonth(), 1),
+          balance: Math.max(0, debtBal),
+          interest: totalDebtInterest + totalLevel1Interest
+        });
+        monthKey = currentMonthKey;
       }
+
+      date = addDays(date, 1);
     }
 
+    monthlySeries.push({
+      date: new Date(date.getFullYear(), date.getMonth(), 1),
+      balance: Math.max(0, debtBal),
+      interest: totalDebtInterest + totalLevel1Interest
+    });
+
+    const years = Math.max(0, (date - startDate) / (365.25 * 24 * 60 * 60 * 1000));
+
     return {
-      days: day,
-      years: day / DAYS_PER_YEAR,
-      mortPmt,
-      totalInterest: totalMortInt + totalLevel1Int,
-      mortInterest: totalMortInt,
-      level1Interest: totalLevel1Int,
-      endedWith: { mortBal, level1Bal }
+      years,
+      payment: pay,
+      totalInterest: totalDebtInterest + totalLevel1Interest,
+      payoffDate: date,
+      series: monthlySeries
     };
+  }
+
+  function alignSeries(seriesA, seriesB){
+    const mapA = new Map(seriesA.map(s => [s.date.toISOString().slice(0,7), s]));
+    const mapB = new Map(seriesB.map(s => [s.date.toISOString().slice(0,7), s]));
+    const keys = Array.from(new Set([...mapA.keys(), ...mapB.keys()])).sort();
+    let lastA = { balance:0, interest:0 };
+    let lastB = { balance:0, interest:0 };
+
+    return keys.map(k => {
+      if (mapA.has(k)) lastA = mapA.get(k);
+      if (mapB.has(k)) lastB = mapB.get(k);
+      return {
+        key:k,
+        aBalance:lastA.balance,
+        bBalance:lastB.balance,
+        aInterest:lastA.interest,
+        bInterest:lastB.interest
+      };
+    });
+  }
+
+  function renderLineChart(svgId, data, aKey, bKey, aColor, bColor){
+    const svg = document.getElementById(svgId);
+    const width = 760;
+    const height = 280;
+    const pad = { top: 16, right: 16, bottom: 30, left: 58 };
+
+    svg.innerHTML = "";
+
+    if (!data.length){
+      return;
+    }
+
+    const values = data.flatMap(d => [d[aKey], d[bKey]]);
+    const maxVal = Math.max(1, ...values);
+    const minVal = 0;
+    const chartW = width - pad.left - pad.right;
+    const chartH = height - pad.top - pad.bottom;
+
+    const x = (i) => pad.left + (data.length === 1 ? chartW / 2 : (i / (data.length - 1)) * chartW);
+    const y = (v) => pad.top + chartH - ((v - minVal) / (maxVal - minVal)) * chartH;
+
+    const gridVals = 4;
+    for (let i = 0; i <= gridVals; i++){
+      const val = minVal + ((maxVal - minVal) * i / gridVals);
+      const yy = y(val);
+      const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+      line.setAttribute("x1", pad.left);
+      line.setAttribute("x2", width - pad.right);
+      line.setAttribute("y1", yy);
+      line.setAttribute("y2", yy);
+      line.setAttribute("stroke", "rgba(255,255,255,.08)");
+      line.setAttribute("stroke-width", "1");
+      svg.appendChild(line);
+
+      const label = document.createElementNS("http://www.w3.org/2000/svg","text");
+      label.setAttribute("x", pad.left - 8);
+      label.setAttribute("y", yy + 4);
+      label.setAttribute("text-anchor", "end");
+      label.setAttribute("fill", "#aeb6c4");
+      label.setAttribute("font-size", "11");
+      label.textContent = Math.round(val).toLocaleString();
+      svg.appendChild(label);
+    }
+
+    const axisX = document.createElementNS("http://www.w3.org/2000/svg","line");
+    axisX.setAttribute("x1", pad.left);
+    axisX.setAttribute("x2", width - pad.right);
+    axisX.setAttribute("y1", height - pad.bottom);
+    axisX.setAttribute("y2", height - pad.bottom);
+    axisX.setAttribute("stroke", "rgba(255,255,255,.14)");
+    svg.appendChild(axisX);
+
+    const axisY = document.createElementNS("http://www.w3.org/2000/svg","line");
+    axisY.setAttribute("x1", pad.left);
+    axisY.setAttribute("x2", pad.left);
+    axisY.setAttribute("y1", pad.top);
+    axisY.setAttribute("y2", height - pad.bottom);
+    axisY.setAttribute("stroke", "rgba(255,255,255,.14)");
+    svg.appendChild(axisY);
+
+    const ticks = Math.min(6, data.length);
+    for (let i = 0; i < ticks; i++){
+      const idx = Math.round((i / Math.max(1, ticks - 1)) * (data.length - 1));
+      const xx = x(idx);
+      const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+      t.setAttribute("x", xx);
+      t.setAttribute("y", height - 10);
+      t.setAttribute("text-anchor", "middle");
+      t.setAttribute("fill", "#aeb6c4");
+      t.setAttribute("font-size", "11");
+      t.textContent = data[idx].key;
+      svg.appendChild(t);
+    }
+
+    function polylineFor(key, color){
+      const points = data.map((d,i) => `${x(i)},${y(d[key])}`).join(" ");
+      const p = document.createElementNS("http://www.w3.org/2000/svg","polyline");
+      p.setAttribute("points", points);
+      p.setAttribute("fill", "none");
+      p.setAttribute("stroke", color);
+      p.setAttribute("stroke-width", "3");
+      p.setAttribute("stroke-linejoin", "round");
+      p.setAttribute("stroke-linecap", "round");
+      return p;
+    }
+
+    svg.appendChild(polylineFor(aKey, aColor));
+    svg.appendChild(polylineFor(bKey, bColor));
   }
 
   function getInputs(){
@@ -813,10 +1170,10 @@
       mortYears: n(document.getElementById("mortYears").value),
       mortPayDay: n(document.getElementById("mortPayDay").value),
 
-      helocLimit: n(document.getElementById("helocLimit").value),
-      helocRate: n(document.getElementById("helocRate").value),
-      chunkPct: n(document.getElementById("chunkPct").value),
-      chunkMin: n(document.getElementById("chunkMin").value),
+      level1Capacity: n(document.getElementById("level1Capacity").value),
+      level1Cost: n(document.getElementById("level1Cost").value),
+      deployPct: n(document.getElementById("deployPct").value),
+      deployMin: n(document.getElementById("deployMin").value)
     };
   }
 
@@ -831,55 +1188,62 @@
       warnEl.classList.add("neg");
       return;
     }
-    if (v.helocLimit <= 0){
+
+    if (v.level1Capacity <= 0){
       warnEl.textContent = "Model configuration error: Level 1 capacity must be greater than zero.";
       warnEl.classList.add("neg");
       return;
     }
 
+    const startDate = new Date();
     const incomes = [
       { amt: v.income1, freq: v.freq1 },
       { amt: v.income2, freq: v.freq2 },
-      { amt: v.income3, freq: v.freq3 },
+      { amt: v.income3, freq: v.freq3 }
     ];
 
     const approxMonthlyIncome =
-      (v.freq1==="weekly"? v.income1*4.333 : v.freq1==="biweekly"? v.income1*2.167 : v.income1) +
-      (v.freq2==="weekly"? v.income2*4.333 : v.freq2==="biweekly"? v.income2*2.167 : v.income2) +
-      (v.freq3==="weekly"? v.income3*4.333 : v.freq3==="biweekly"? v.income3*2.167 : v.income3);
+      (v.freq1==="weekly" ? v.income1*4.333 : v.freq1==="biweekly" ? v.income1*2.167 : v.income1) +
+      (v.freq2==="weekly" ? v.income2*4.333 : v.freq2==="biweekly" ? v.income2*2.167 : v.income2) +
+      (v.freq3==="weekly" ? v.income3*4.333 : v.freq3==="biweekly" ? v.income3*2.167 : v.income3);
 
-    const std = runStandardMortgage(v.mortBalance, v.mortRate, v.mortYears);
-    const stdYears = std.months / 12;
-
-    const recapture = runRecaptureCycle({
-      mortBalance0: v.mortBalance,
-      mortRatePct: v.mortRate,
-      mortYears: v.mortYears,
-      mortPayDay: v.mortPayDay,
-      level1Capacity: v.helocLimit,
-      level1CostPct: v.helocRate,
-      deployPct: v.chunkPct,
-      deployMin: v.chunkMin,
-      monthlyExpenses: v.monthlyExpenses,
-      incomes
+    const std = runStandardScenario({
+      startDate,
+      debtBalance: v.mortBalance,
+      debtRatePct: v.mortRate,
+      yearsRemaining: v.mortYears,
+      paymentDay: v.mortPayDay
     });
 
-    const recYears = recapture.years;
-    const timeSaved = Math.max(0, stdYears - recYears);
-    const interestSaved = Math.max(0, std.interest - recapture.totalInterest);
+    const rec = runRecaptureScenario({
+      startDate,
+      debtBalance: v.mortBalance,
+      debtRatePct: v.mortRate,
+      yearsRemaining: v.mortYears,
+      paymentDay: v.mortPayDay,
+      monthlyExpenses: v.monthlyExpenses,
+      incomes,
+      level1Capacity: v.level1Capacity,
+      level1CostPct: v.level1Cost,
+      deployPct: v.deployPct,
+      deployMin: v.deployMin
+    });
 
-    document.getElementById("stdYearsOut").textContent = stdYears.toFixed(1);
-    document.getElementById("velYearsOut").textContent = recYears.toFixed(1);
-    document.getElementById("timeSaved").textContent = timeSaved.toFixed(1);
+    const timeSaved = Math.max(0, std.years - rec.years);
+    const interestSaved = Math.max(0, std.totalInterest - rec.totalInterest);
 
-    document.getElementById("stdPmtOut").textContent = fmt0(std.pmt);
-    document.getElementById("stdPmtOut2").textContent = fmt0(std.pmt);
+    document.getElementById("stdYearsOut").textContent = fmt1(std.years);
+    document.getElementById("recYearsOut").textContent = fmt1(rec.years);
+    document.getElementById("timeSaved").textContent = fmt1(timeSaved);
 
-    document.getElementById("stdIntOut").textContent = fmt0(std.interest);
-    document.getElementById("velIntOut").textContent = fmt0(recapture.totalInterest);
+    document.getElementById("stdPmtOut").textContent = fmt0(std.payment);
+    document.getElementById("stdPmtOut2").textContent = fmt0(std.payment);
+
+    document.getElementById("stdIntOut").textContent = fmt0(std.totalInterest);
+    document.getElementById("recIntOut").textContent = fmt0(rec.totalInterest);
     document.getElementById("interestSaved").textContent = fmt0(interestSaved);
 
-    const approxNet = approxMonthlyIncome - v.monthlyExpenses - std.pmt;
+    const approxNet = approxMonthlyIncome - v.monthlyExpenses - std.payment;
 
     if (approxMonthlyIncome <= v.monthlyExpenses){
       warnEl.textContent = "Warning: Approximate monthly income is less than or equal to monthly obligations. The recapture cycle may stall under these conditions.";
@@ -892,12 +1256,103 @@
       warnEl.classList.add("pos");
     }
 
+    const aligned = alignSeries(std.series, rec.series);
+    renderLineChart("balanceChart", aligned, "aBalance", "bBalance", "#d6a45c", "#667eea");
+    renderLineChart("interestChart", aligned, "aInterest", "bInterest", "#d6a45c", "#38ef7d");
+
+    latestPayload = {
+      timestamp: new Date().toISOString(),
+      contact: null,
+      inputs: v,
+      outputs: {
+        standardYears: Number(std.years.toFixed(2)),
+        recaptureYears: Number(rec.years.toFixed(2)),
+        timeSavedYears: Number(timeSaved.toFixed(2)),
+        standardPayment: Number(std.payment.toFixed(2)),
+        standardInterest: Number(std.totalInterest.toFixed(2)),
+        recaptureInterest: Number(rec.totalInterest.toFixed(2)),
+        interestSaved: Number(interestSaved.toFixed(2))
+      }
+    };
+
     const r = document.getElementById("results");
     r.style.display = "block";
     r.scrollIntoView({behavior:"smooth", block:"nearest"});
   }
 
+  function collectLeadPayload(){
+    if (!latestPayload) return null;
+    return {
+      ...latestPayload,
+      contact: {
+        name: document.getElementById("leadName").value.trim(),
+        email: document.getElementById("leadEmail").value.trim(),
+        phone: document.getElementById("leadPhone").value.trim(),
+        consent: document.getElementById("leadConsent").value
+      }
+    };
+  }
+
+  function setCRMStatus(message){
+    document.getElementById("crmStatus").textContent = message;
+  }
+
+  function downloadJSON(data, filename){
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   document.getElementById("calcBtn").addEventListener("click", calc);
+
+  document.getElementById("saveLeadBtn").addEventListener("click", function(){
+    const payload = collectLeadPayload();
+    if (!payload){
+      setCRMStatus("Run the model first, then save the result.");
+      return;
+    }
+    localStorage.setItem("capitalRecaptureLatest", JSON.stringify(payload));
+    downloadJSON(payload, "capital-recapture-result.json");
+    setCRMStatus("Result saved locally and downloaded as JSON.");
+  });
+
+  document.getElementById("sendLeadBtn").addEventListener("click", async function(){
+    const payload = collectLeadPayload();
+    if (!payload){
+      setCRMStatus("Run the model first, then send the result.");
+      return;
+    }
+
+    if (!payload.contact.email){
+      setCRMStatus("Enter an email before sending to CRM.");
+      return;
+    }
+
+    if (!WEBHOOK_URL){
+      setCRMStatus("No webhook configured yet. Add your webhook URL in the code, then try again.");
+      return;
+    }
+
+    try{
+      const res = await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok){
+        throw new Error("Webhook request failed");
+      }
+
+      setCRMStatus("Result sent to CRM successfully.");
+    } catch (err){
+      setCRMStatus("CRM send failed. Check your webhook URL and CORS settings.");
+    }
+  });
 })();
 </script>
 </body>
